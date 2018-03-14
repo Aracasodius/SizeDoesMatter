@@ -10,7 +10,7 @@ public class NewMovement : MonoBehaviour
 {
     private Animator anim;
     private PolygonCollider2D poly;
-    private Rigidbody2D rig;
+    private Rigidbody2D rb;
     private SpriteRenderer spr;
 
     #region Variables
@@ -27,13 +27,15 @@ public class NewMovement : MonoBehaviour
     [SerializeField] private string WalkAnim;
     private float cache_speed;
     public bool Jumping;
+    [SerializeField] private float fallMultiplier = 2.5f;
+    [SerializeField] private float lowJumpMultiplier = 2f;
     
 #endregion
 
     void Start()
     {
         cache_speed = Speed;
-        rig = gameObject.GetComponent<Rigidbody2D>();
+        rb = gameObject.GetComponent<Rigidbody2D>();
         spr = gameObject.GetComponent<SpriteRenderer>();
         anim = gameObject.GetComponent<Animator>();
     }
@@ -49,25 +51,25 @@ public class NewMovement : MonoBehaviour
 
         if (Input.GetAxisRaw(VerticalAxis) != 0 && !Jumping) { Jump(JumpHeight); }
 
-        if (Input.GetAxisRaw(AbilityAxis) != 0)
-        {
-            CauseAbility(true, PlayerIndex);
-        }
-        else if (Input.GetAxisRaw(AbilityAxis) == 0)
-        {
-            CauseAbility(false, PlayerIndex);
-        }
+        if (Input.GetAxisRaw(AbilityAxis) != 0) { CauseAbility(true, PlayerIndex); }
+        else if (Input.GetAxisRaw(AbilityAxis) == 0) { CauseAbility(false, PlayerIndex); }
+
+        if (rb.velocity.y < 0)
+        { rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime; }
+
+        else if (rb.velocity.y > 0 && !Input.GetButton(VerticalAxis))
+        { rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime; }
     }
 
     public void Move(float dir, float speed)
     {
-        rig.velocity = new Vector2(speed * dir, rig.velocity.y);
+        rb.velocity = new Vector2(speed * dir, rb.velocity.y);
     }
 
     public void Jump(float speed)
     {
         Jumping = true;
-        rig.AddForce(transform.up * (speed * 45));
+        rb.AddForce(transform.up * (speed * 45));
     }
 
     public void CauseAbility(bool effect, int playerCount)
@@ -90,7 +92,9 @@ public class NewMovement : MonoBehaviour
             {
                 GameObject Player1 = GameObject.Find("Player");
                 Vector2 targetpos = Player1.transform.position;
-                transform.position = Vector2.MoveTowards(transform.position, targetpos, 7 * Time.deltaTime);
+
+                if (Vector2.Distance(transform.position, targetpos) > 1f)
+                { transform.position = Vector2.MoveTowards(transform.position, targetpos, 7 * Time.deltaTime); }
             }
 
         }

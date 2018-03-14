@@ -33,7 +33,6 @@ public class ScoreSystem : MonoBehaviour
     {
         PlayerPrefs.SetFloat("Score", 0);
         PlayerPrefs.SetFloat("HighScore", 0);
-        PlayerPrefs.SetInt("TotalClicks", 0);
     }
 
 }

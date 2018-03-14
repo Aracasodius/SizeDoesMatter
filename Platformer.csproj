@@ -283,9 +283,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\CoinPickup.cs" />
+    <Compile Include="Assets\Scripts\CombatManager.cs" />
     <Compile Include="Assets\Scripts\FeetCollision.cs" />
     <Compile Include="Assets\Scripts\Health.cs" />
+    <Compile Include="Assets\Scripts\HealthEditor.cs" />
+    <Compile Include="Assets\Scripts\NewCam.cs" />
     <Compile Include="Assets\Scripts\NewMovement.cs" />
+    <Compile Include="Assets\Scripts\PlayerTouchEvent.cs" />
     <Compile Include="Assets\Scripts\ScoreSystem.cs" />
     <Compile Include="Assets\Scripts\ScoreSystemEditor.cs" />
     <Compile Include="Assets\Scripts\SmoothCamera2D.cs" />
